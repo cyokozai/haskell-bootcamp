@@ -1,0 +1,22 @@
+{
+  "name": "Haskell",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "remoteUser": "root",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "haskell.haskell",
+        "justusadam.language-haskell"
+      ],
+      "settings": {
+        "haskell.manageHLS": "PATH"
+      }
+    }
+  },
+  "mounts": [
+    "source=haskell-cabal-store,target=/root/.cabal,type=volume"
+  ],
+  "postCreateCommand": ["sh", "-c", "ghcup --version && ghc --version && cabal --version"]
+}
