@@ -2,4 +2,4 @@
 html: true
 allowLocalFiles: true
 themeSet:
-  - ./theme/chibatech.css
+  - ./theme/cyokozai.css
