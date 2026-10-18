@@ -1,18 +1,18 @@
 ---
 marp: true
-theme: chibatech
+theme: cyokozai
 paginate: true
-backgroundImage: url('assets/bg.png')
 title: アルゴリズム特論 第5章 高階関数
 ---
 
 <!-- _class: title -->
+<!-- _footer: アルゴリズム特論｜すごいHaskellたのしく学ぼう！ -->
 
-# アルゴリズム特論
+# ![](assets/avatar.png) アルゴリズム特論
 
 ## 第5章　高階関数
 
-学籍番号　氏名
+井上 裕介（cyokozai）
 
 <!--
 0:00 開始。教科書「すごいHaskellたのしく学ぼう!」第5章。
@@ -841,11 +841,9 @@ $ runghc report5.hs
 
 ---
 
-<!-- _class: break -->
+<!-- _class: statement -->
 
-# 休憩
-
-<p class="big">休憩　5分</p>
+# 休憩 5分
 
 再開は 1:05 から
 
@@ -1393,6 +1391,8 @@ sum . replicate 5 $ max 6.7 8.9          -- 3つとも 44.5
 ---
 
 # 5.7　関数合成
+
+<style scoped>th, td { padding: 2px 12px; }</style>
 
 ## 括弧の多い式を書き直す手順
 

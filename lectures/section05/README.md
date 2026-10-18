@@ -6,8 +6,9 @@
 
 | ファイル | 内容 |
 |---|---|
-| `slides.md` | Marp スライド（約60枚、ハンズオン・中間演習入り） |
-| `theme/chibatech.css` | Marp テーマ（`assets/bg.png` を背景に使用） |
+| `slides.md` | Marp スライド（60枚、ハンズオン・中間演習入り） |
+| `theme/cyokozai.css` | Marp テーマ（普段使いの Google Slides テンプレートを CSS で再現） |
+| `assets/avatar.png` | 表紙のアバター |
 | `notes.md` | 予習ノート（第4章の復習＋第5章の解説、確認問題つき） |
 | `handson.hs` | 第5章のコード一式。`ghci handson.hs` で講義中の例をすべて試せる |
 | `report5.hs` | 第5回 課題テンプレート（配布用）。`runghc report5.hs` で採点 |
