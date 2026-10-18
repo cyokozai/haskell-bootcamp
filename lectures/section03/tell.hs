@@ -1,0 +1,1 @@
+tell :: Show a => [a] -> String

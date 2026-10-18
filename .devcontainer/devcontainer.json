@@ -18,5 +18,5 @@
   "mounts": [
     "source=haskell-cabal-store,target=/root/.cabal,type=volume"
   ],
-  "postCreateCommand": ["sh", "-c", "ghcup --version && ghc --version && cabal --version"]
+  "postCreateCommand": "ghcup --version && ghc --version && cabal --version"
 }
