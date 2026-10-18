@@ -8,10 +8,13 @@
     "vscode": {
       "extensions": [
         "haskell.haskell",
-        "justusadam.language-haskell"
+        "justusadam.language-haskell",
+        "marp-team.marp-vscode"
       ],
       "settings": {
-        "haskell.manageHLS": "PATH"
+        "haskell.manageHLS": "PATH",
+        "markdown.marp.themes": ["./lectures/section05/theme/cyokozai.css"],
+        "markdown.marp.html": "all"
       }
     }
   },
