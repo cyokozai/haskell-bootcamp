@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        golang-version: [1.25.3]
+        golang-version: [stable]
     permissions:
       contents: write
     steps:
