@@ -10,13 +10,13 @@
  */
 
 @import 'default';
-@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Source+Code+Pro:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Ubuntu+Mono:wght@400;700&display=swap');
 
 :root {
   --cyan: #01afd1;
   --cyan-deep: #006f85;
   --yellow: #f8e71c;
-  --ink: #333333;
+  --ink: #000000;
   --muted: #5f6b73;
   --code-bg: #f4f8fa;
   --orange: #f08c00;
@@ -70,11 +70,11 @@ h2::before {
   margin-right: 0.45em;
   vertical-align: 0.1em;
 }
-h3 { font-size: 26px; margin: 12px 0 6px; color: var(--cyan-deep); }
+h3 { font-size: 26px; margin: 12px 0 6px; color: var(--ink); }
 
 p, li { margin: 4px 0; }
 ul, ol { padding-left: 1.3em; margin: 4px 0; }
-strong { color: var(--cyan-deep); font-weight: 700; }
+strong { color: inherit; font-weight: 700; }
 a { color: var(--cyan-deep); }
 
 /* ページ番号: 右下 (黄色の帯の上) */
@@ -87,8 +87,8 @@ section::after {
 
 /* ---------- コード ---------- */
 code {
-  font-family: 'Source Code Pro', 'Menlo', 'Consolas', monospace;
-  font-size: 0.88em;
+  font-family: 'Ubuntu Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 1em;
   background: #e9f5f8;
   padding: 0.05em 0.3em;
   border-radius: 4px;
@@ -100,10 +100,23 @@ pre {
   background: var(--code-bg);
   border-left: 5px solid var(--cyan);
   border-radius: 0 6px 6px 0;
-  font-size: 21px;
-  line-height: 1.45;
+  font-size: 22px;
+  line-height: 1.35;
+  tab-size: 4;
 }
 pre code { background: none; padding: 0; font-size: 1em; }
+
+/* ターミナル（GHCi・シェル・他言語の REPL）は黒背景。ファイルのコードは上の淡い背景 */
+pre:has(> code.language-ghci),
+pre:has(> code.language-console),
+pre:has(> code.language-julia-repl) {
+  background: #1d1f21;
+  border-left-color: #1d1f21;
+  border-radius: 6px;
+}
+pre > code.language-ghci,
+pre > code.language-console,
+pre > code.language-julia-repl { color: #e6e6e6; }
 
 /* ---------- 部品 ---------- */
 .cols {
@@ -114,7 +127,7 @@ pre code { background: none; padding: 0; font-size: 1em; }
 }
 .cols.even { grid-template-columns: 1fr 1fr; }
 .cols > div > :first-child { margin-top: 0; }
-.note { font-size: 22px; color: var(--muted); }
+.note { font-size: 22px; color: var(--ink); }
 
 /* 重要語 */
 .key {
@@ -122,7 +135,7 @@ pre code { background: none; padding: 0; font-size: 1em; }
   background: var(--yellow);
   color: var(--ink);
   padding: 0 10px;
-  font-weight: 700;
+  font-weight: 500;
   border-radius: 3px;
 }
 /* 一言まとめ */
@@ -274,7 +287,7 @@ section.exercise > h1:first-child::before {
   background: var(--cyan);
   color: #fff;
 }
-section.handson pre { font-size: 20px; }
+section.handson pre { font-size: 21px; }
 .time {
   position: absolute;
   right: 60px;

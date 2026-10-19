@@ -27,7 +27,7 @@ title: アルゴリズム特論 第5章 高階関数
 | 0:00–0:05 | 導入・第4章の振り返り |
 | 0:05–0:20 | 5.1 カリー化関数 |
 | 0:20–0:50 | 5.2 高階実演 / 5.3 道具箱 / 5.4 ラムダ式 |
-| 0:50–1:00 | **前半のまとめ演習**（課題 問1） |
+| 0:50–1:00 | 前半のまとめ演習（課題 問1） |
 | 1:05–1:30 | 5.5 畳み込み / 5.6 `$` |
 | 1:30–1:42 | 5.7 関数合成 |
 | 1:42–1:50 | まとめ・課題の説明 |
@@ -56,24 +56,24 @@ title: アルゴリズム特論 第5章 高階関数
 ```haskell
 maximum' :: (Ord a) => [a] -> a
 maximum' [] = error "empty list"
-maximum' [x] = x                  -- 基底部
-maximum' (x:xs) = max x (maximum' xs) -- 再帰部
+maximum' [x] = x
+maximum' (x:xs) = max x (maximum' xs)
 ```
 
 ```haskell
 reverse' :: [a] -> [a]
-reverse' [] = []                  -- 基底部
+reverse' [] = []
 reverse' (x:xs) = reverse' xs ++ [x]
 ```
 
 </div>
 <div>
 
-- **基底部**：再帰せずに答えが決まる場合
-- **再帰部**：小さな問題に分けて自分自身を呼ぶ
+- 基底部：再帰せずに答えが決まる場合（例：`maximum' [x] = x`）
+- 再帰部：小さな問題に分けて自分自身を呼ぶ
 - リストは `[]` と `x:xs` に分けて考える
 
-<div class="point">今日：この「リストを先頭から1つずつ処理する」パターンを<b>高階関数</b>で短く書く</div>
+<div class="point">今日は、リストを先頭から1つずつ処理するこのパターンを高階関数で短く書く</div>
 
 </div>
 </div>
@@ -86,15 +86,17 @@ reverse' (x:xs) = reverse' xs ++ [x]
 
 <!-- _class: handson -->
 
+<style scoped>th, td { padding: 0 12px; }</style>
+
 # H0　準備：ファイルを作って GHCi で読み込む
 
 <span class="time">0:03–0:05</span>
 
-1. devcontainer を起動し、ターミナルで作業ディレクトリへ移動
+1. devcontainer のターミナルで作業ディレクトリへ移動し、GHCi で課題ファイルを開く
 
-```bash
+```console
 $ cd lectures/section05
-$ ghci report5.hs          # 課題ファイルを読み込んで起動
+$ ghci report5.hs
 ```
 
 2. GHCi でよく使うコマンド
@@ -106,7 +108,7 @@ $ ghci report5.hs          # 課題ファイルを読み込んで起動
 | `:t 式` | 式の型を表示（type） |
 | `:q` | GHCi を終了 |
 
-3. 課題のテストを一括で実行：`$ runghc report5.hs`（未実装は `[--]` と表示される）
+3. 課題のテストを一括で実行：`runghc report5.hs`（未実装は `[--]` と表示される）
 
 ---
 
@@ -132,22 +134,23 @@ $ ghci report5.hs          # 課題ファイルを読み込んで起動
 <div>
 
 ```haskell
-max 4 5     -- 2つを比べて大きい方
-(+) 4 5     -- 2つを足す
-(++) [1] [2] -- 2つのリストを結合
+max 4 5
+(+) 4 5
+(++) [1] [2]
 ```
 
 </div>
 <div>
 
-複数の引数をとるように見えるが、実際は
-**カリー化された関数**
+上から順に、2つを比べて大きい方、2つの和、2つのリストの結合
+
+複数の引数をとるように見えるが、実際はカリー化された関数
 
 </div>
 </div>
 
-- **カリー化**：複数の引数をとる関数を「引数を1つ受け取り、関数を返す関数」の連なりとして扱うこと
-- **高階関数**：関数を引数に取ったり、返り値として返したりする関数
+- カリー化：複数の引数をとる関数を、引数を1つ受け取って関数を返す関数の連なりとして扱うこと
+- 高階関数：関数を引数に取ったり、返り値として返したりする関数
 
 ---
 
@@ -158,7 +161,7 @@ max 4 5     -- 2つを比べて大きい方
 <div class="cols">
 <div>
 
-```haskell
+```ghci
 ghci> max 4 5
 5
 ghci> (max 4) 5
@@ -170,7 +173,7 @@ max :: Ord a => a -> a -> a
 </div>
 <div>
 
-1. `max 4` が「4 と比べて大きい方を返す関数」を返す
+1. `max 4` は、4 と比べて大きい方を返す関数を返す
 2. その関数を `5` に適用する
 
 `a -> a -> a` は `a -> (a -> a)` と同じ
@@ -184,24 +187,26 @@ max :: Ord a => a -> a -> a
 
 # 5.1　カリー化関数
 
+<style scoped>th, td { padding: 0 12px; }</style>
+
 ## 部分適用の例：`multThree`
 
 <img class="illust" src="assets/irasutoya/building_koujou_entotsu.png" style="top: 370px; width: 205px;" alt="工場">
 
 ```haskell
-multThree :: Int -> Int -> Int -> Int   -- = Int -> (Int -> (Int -> Int))
+multThree :: Int -> Int -> Int -> Int
 multThree x y z = x * y * z
 ```
 
-`multThree 3 5 9` は `((multThree 3) 5) 9` と同じ（スペース区切りの関数適用は左結合）
+型は `Int -> (Int -> (Int -> Int))` と読む。`multThree 3 5 9` は `((multThree 3) 5) 9` と同じ（スペース区切りの関数適用は左結合）
 
 | 式 | 得られるもの |
 |---|---|
-| `multThree 3` | 「3 と残り2つの引数を掛ける関数」 |
-| `(multThree 3) 5` | 「3 と 5 と残り1つの引数を掛ける関数」 |
+| `multThree 3` | 3 と残り2つの引数を掛ける関数 |
+| `(multThree 3) 5` | 3 と 5 と残り1つの引数を掛ける関数 |
 | `((multThree 3) 5) 9` | `135` |
 
-<div class="point">関数は「材料を受け取って何かを作る小さな工場」。<br>3 を入れると、数ではなく「ちょっと小さくなった工場」が出てくる</div>
+<div class="point">関数は、材料を受け取って何かを作る小さな工場のようなもの。<br>3 を入れると、数ではなく一回り小さくなった工場が出てくる</div>
 
 ---
 
@@ -212,7 +217,7 @@ multThree x y z = x * y * z
 <div class="cols">
 <div>
 
-```haskell
+```ghci
 ghci> let multTwoWithNine = multThree 9
 ghci> multTwoWithNine 2 3
 54
@@ -221,26 +226,27 @@ ghci> multTwoWithNine 2 3
 ```haskell
 compareWithHundred :: Int -> Ordering
 compareWithHundred x = compare 100 x
--- ↓ 両辺の右端の x を省略できる
-compareWithHundred = compare 100
 ```
 
+両辺の右端の `x` は省略できる
+
 ```haskell
-ghci> compareWithHundred 99
-GT
+compareWithHundred = compare 100
 ```
 
 </div>
 <div>
 
-`multThree 9` は 2 引数の関数
-→ 残り2つを掛けて 9 倍
+`multThree 9` は 2 引数の関数で、残り2つを掛けて 9 倍する
 
-`compare 100` は
-「数を受け取り 100 と比較する関数」
+`compare 100` は、数を受け取って 100 と比較する関数
 
-型 `(Ord a) => a -> (a -> Ordering)` に
-100 を与えたので、型宣言は同じまま
+型 `(Ord a) => a -> (a -> Ordering)` に 100 を与えたので、型宣言は同じまま
+
+```ghci
+ghci> compareWithHundred 99
+GT
+```
 
 </div>
 </div>
@@ -258,20 +264,19 @@ GT
 divideByTen :: (Floating a) => a -> a
 divideByTen = (/10)
 
-ghci> divideByTen 200   -- 200 / 10 と同じ
-20.0
-```
-
-```haskell
 isUpperAlphanum :: Char -> Bool
 isUpperAlphanum = (`elem` ['A'..'Z'])
+```
+
+```ghci
+ghci> divideByTen 200
+20.0
 ```
 
 </div>
 <div>
 
-片側だけに値を置いて**括弧で囲む**と、
-値を置かなかった側を引数にとる関数になる
+片側だけに値を置いて括弧で囲むと、値を置かなかった側を引数にとる関数になる
 
 `(/10) 200` = `200 / 10`
 `(10/) 200` = `10 / 200`
@@ -279,7 +284,7 @@ isUpperAlphanum = (`elem` ['A'..'Z'])
 </div>
 </div>
 
-<div class="point"><b>注意</b>：<code>(-4)</code> は「マイナス4」の意味。4 を引く関数は <code>(subtract 4)</code> と書く</div>
+<div class="point">注意：<code>(-4)</code> はマイナス4という数を表す。4 を引く関数は <code>(subtract 4)</code> と書く</div>
 
 ---
 
@@ -287,18 +292,59 @@ isUpperAlphanum = (`elem` ['A'..'Z'])
 
 ## 関数そのものは表示できない
 
-```haskell
+```ghci
 ghci> multThree 3 4
 <interactive>:1:1: error:
     • No instance for (Show (Int -> Int)) arising from a use of ‘print’
         (maybe you haven't applied a function to enough arguments?)
 ```
 
-- `multThree 3 4` は `Int -> Int` 型の**関数**を返す
+- `multThree 3 4` は `Int -> Int` 型の関数を返す
 - 関数は `Show` 型クラスのインスタンスではないので、文字列にできない
 - `1 + 1` なら結果の `2` に `show` を呼んで `"2"` を表示できる
 
 <div class="point">カリー化と部分適用の働きは、この章の土台。ここだけは必ず押さえる</div>
+
+---
+
+# 5.1　他の言語では：カリー化と部分適用
+
+<div class="cols even">
+<div>
+
+Rust
+
+```rust
+fn add(x: i32) -> impl Fn(i32) -> i32 {
+    move |y| x + y
+}
+
+let add2 = add(2);
+println!("{}", add2(3));
+println!("{}", add(2)(3));
+```
+
+</div>
+<div>
+
+Go
+
+```go
+func add(x int) func(int) int {
+	return func(y int) int { return x + y }
+}
+
+add2 := add(2)
+fmt.Println(add2(3))
+fmt.Println(add(2)(3))
+```
+
+</div>
+</div>
+
+- どちらも 5 を2回表示する。`add2` は `(+2)` にあたる部分適用済みの関数
+- Rust や Go の関数は引数をまとめて受け取るのが普通で、関数を返す関数（クロージャ）を書くと同じことができる
+- Haskell ではこれが標準の形なので、`(+) 2` と書くだけでよい
 
 ---
 
@@ -308,19 +354,21 @@ ghci> multThree 3 4
 
 <span class="time">3分</span>
 
-`ghci handson.hs` で起動し、次を入力して結果を予想してから確かめる
+`ghci handson.hs` で起動し、次を入力する。結果を予想してから確かめる
 
-```haskell
+```ghci
 ghci> :t max
-ghci> :t max 4             -- 型はどう変わる？
+ghci> :t max 4
 ghci> (max 4) 5
 ghci> multTwoWithNine 2 3
 ghci> (/10) 200
-ghci> (10/) 200            -- 左右を入れ替えると？
-ghci> (-4)                 -- 関数ではなく数になる
+ghci> (10/) 200
+ghci> (-4)
 ghci> (subtract 4) 10
-ghci> multThree 3 4        -- エラーになる理由は？
+ghci> multThree 3 4
 ```
+
+`:t max 4` で型がどう変わるか、`(10/)` で左右を入れ替えると何が起きるか、`multThree 3 4` がエラーになる理由を考える
 
 ---
 
@@ -350,7 +398,7 @@ applyTwice :: (a -> a) -> a -> a
 applyTwice f x = f (f x)
 ```
 
-```haskell
+```ghci
 ghci> applyTwice (+3) 10
 16
 ghci> applyTwice (++ " HAHA") "HEY"
@@ -366,11 +414,9 @@ ghci> applyTwice (3:) [1]
 </div>
 <div>
 
-型の**括弧は必須**
-第1引数が「`a` を受け取り `a` を返す関数」であることを表す
+型の括弧は必須。第1引数が、`a` を受け取り `a` を返す関数であることを表す
 
-`->` は右結合なので、括弧がないと
-`a -> a -> a -> a`（3引数関数）になる
+`->` は右結合なので、括弧がないと `a -> a -> a -> a`（3引数関数）になる
 
 <div class="point">1引数の関数を渡したいときは、部分適用で作って渡せばよい</div>
 
@@ -401,8 +447,7 @@ zipWith' f (x:xs) (y:ys)
 - 第2・3引数：`[a]` と `[b]`
 - 結果：`[c]`
 
-基底部はどちらかが空リスト
-→ `zip` と同じ形。`(x, y)` の代わりに `f x y` を返す
+基底部はどちらかが空リスト。`zip` と同じ形で、`(x, y)` の代わりに `f x y` を返す
 
 </div>
 </div>
@@ -415,7 +460,7 @@ zipWith' f (x:xs) (y:ys)
 
 ## `zipWith'` の使用例
 
-```haskell
+```ghci
 ghci> zipWith' (+) [4,2,5,6] [2,6,2,3]
 [6,8,7,9]
 ghci> zipWith' max [6,3,2,1] [7,3,1,5]
@@ -449,7 +494,6 @@ flip' f = g
 <div>
 
 ```haskell
--- カリー化を使って簡潔に
 flip' :: (a -> b -> c) -> b -> a -> c
 flip' f y x = f x y
 ```
@@ -457,14 +501,18 @@ flip' f y x = f x y
 </div>
 </div>
 
-```haskell
+右はカリー化を使って簡潔に書いたもの。2つは同じ関数
+
+```ghci
 ghci> zip [1,2,3,4,5] "hello"
 [(1,'h'),(2,'e'),(3,'l'),(4,'l'),(5,'o')]
 ghci> flip' zip [1,2,3,4,5] "hello"
 [('h',1),('e',2),('l',3),('l',4),('o',5)]
-ghci> zipWith (flip' div) [2,2..] [10,8,6,4,2]     -- flip' div 2 10 = div 10 2
+ghci> zipWith (flip' div) [2,2..] [10,8,6,4,2]
 [5,4,3,2,1]
 ```
+
+最後の例では `flip' div 2 10` が `div 10 2` として計算される
 
 ---
 
@@ -495,7 +543,7 @@ map _ [] = []
 map f (x:xs) = f x : map f xs
 ```
 
-```haskell
+```ghci
 ghci> map (+3) [1,5,3,1,6]
 [4,8,6,4,9]
 ghci> map (++ "!") ["BIFF", "BANG", "POW"]
@@ -513,8 +561,7 @@ ghci> map fst [(1,2),(3,5),(6,3),(2,6),(2,5)]
 
 `a` から `b` への関数と `a` のリストを受け取り、`b` のリストを返す
 
-`map (+3) [1,5,3,1,6]` は
-`[x+3 | x <- [1,5,3,1,6]]` と同じ
+`map (+3) [1,5,3,1,6]` は `[x+3 | x <- [1,5,3,1,6]]` と同じ
 
 <div class="point"><code>map</code> の <code>map</code> のような場面では、<code>map</code> のほうが読みやすい</div>
 
@@ -541,14 +588,14 @@ filter p (x:xs)
 </div>
 <div>
 
-**述語**：`True` か `False` を返す関数
+述語：`True` か `False` を返す関数
 
 `p x` が `True` なら新しいリストに含め、`False` なら含めない
 
 </div>
 </div>
 
-```haskell
+```ghci
 ghci> filter (>3) [1,5,3,2,1,6,4,3,2,1]
 [5,6,4]
 ghci> filter even [1..10]
@@ -566,15 +613,14 @@ ghci> filter (`elem` ['a'..'z']) "u LaUgH aT mE BeCaUsE I aM diFfeRent"
 <div class="cols even">
 <div>
 
-```haskell
+```ghci
 ghci> filter (<15) (filter even [1..20])
 [2,4,6,8,10,12,14]
 ghci> [x | x <- [1..20], x < 15, even x]
 [2,4,6,8,10,12,14]
 ```
 
-どちらを使うかにルールはない。
-**読みやすいほう**を選ぶ
+どちらを使うかにルールはない。読みやすいほうを選ぶ
 
 </div>
 <div>
@@ -606,14 +652,13 @@ largestDivisible = head (filter p [100000,99999..])
     where p x = x `mod` 3829 == 0
 ```
 
-```haskell
+```ghci
 ghci> largestDivisible
 99554
 ```
 
-- 降順のリストを `filter` するので、条件を満たす最大の数は**先頭**に現れる
-- Haskell は**遅延評価**なので、最初の解が見つかった時点で評価が止まる
-  → リストが有限でも無限でも関係ない
+- 降順のリストを `filter` するので、条件を満たす最大の数は先頭に現れる
+- Haskell は遅延評価なので、最初の解が見つかった時点で評価が止まる。リストが有限でも無限でも関係ない
 
 ---
 
@@ -621,14 +666,14 @@ ghci> largestDivisible
 
 ## `takeWhile`：条件を満たす間だけ取り出す
 
-```haskell
+```ghci
 ghci> takeWhile (/=' ') "elephants know how to party"
 "elephants"
 ```
 
 10000 より小さい奇数の平方数の和
 
-```haskell
+```ghci
 ghci> sum (takeWhile (<10000) (filter odd (map (^2) [1..])))
 166650
 ghci> sum (takeWhile (<10000) [m | m <- [n^2 | n <- [1..]], odd m])
@@ -665,7 +710,7 @@ chain n
 </div>
 <div>
 
-```haskell
+```ghci
 ghci> chain 10
 [10,5,16,8,4,2,1]
 ghci> chain 1
@@ -680,7 +725,7 @@ ghci> chain 30
 </div>
 </div>
 
-**問題**：1〜100 の数のうち、長さが 15 より長いコラッツ列の開始数はいくつあるか
+問題：1〜100 の数のうち、長さが 15 より長いコラッツ列の開始数はいくつあるか
 
 ---
 
@@ -698,7 +743,7 @@ numLongChains = length (filter isLong (map chain [1..100]))
 2. 長さが 15 より長いかを調べる述語 `isLong` で `filter`
 3. 残った列の個数を `length` で数える（結果は `66`）
 
-<div class="note">※ 教科書の問題文は「長さ15以上」だがコードは <code>&gt; 15</code>。本講義はコードに合わせ「15より長い」とする<br>※ <code>length</code> は <code>Int</code> を返す。一般の <code>Num a</code> にしたいなら <code>fromIntegral</code> を使う</div>
+<div class="note">※ 教科書の問題文は「長さ15以上」だがコードは <code>&gt; 15</code>。本講義はコードに合わせ、15より長いとする<br>※ <code>length</code> は <code>Int</code> を返す。一般の <code>Num a</code> にしたいなら <code>fromIntegral</code> を使う</div>
 
 ---
 
@@ -709,7 +754,7 @@ numLongChains = length (filter isLong (map chain [1..100]))
 <div class="cols">
 <div>
 
-```haskell
+```ghci
 ghci> let listOfFuns = map (*) [0..]
 ghci> (listOfFuns !! 4) 5
 20
@@ -720,15 +765,14 @@ ghci> (listOfFuns !! 4) 5
 
 `(*)` は2引数関数なので、1つだけ与えると1引数関数になる
 
-`map (*) [0..]`
-= `[(0*), (1*), (2*), (3*), (4*), ...]`
+`map (*) [0..]` = `[(0*), (1*), (2*), (3*), (4*), ...]`
 
 </div>
 </div>
 
 4番目の要素 `(4*)` を取り出して 5 に適用 → `4 * 5` = `20`
 
-<div class="point">リストの要素が「関数」になることもある</div>
+<div class="point">リストの要素が関数になることもある</div>
 
 ---
 
@@ -768,7 +812,7 @@ numLongChains = length (filter (\xs -> length xs > 15)
 
 `where` で `isLong` を定義する代わりに、その場で関数を渡している
 
-**不要なラムダに注意**
+不要なラムダに注意。次の2つは同じ結果になる
 
 ```haskell
 map (+3) [1,6,3,2]
@@ -786,7 +830,7 @@ map (\x -> x + 3) [1,6,3,2]
 
 ## 複数の引数とパターンマッチ
 
-```haskell
+```ghci
 ghci> zipWith (\a b -> (a * 30 + 3) / b) [5,4,3,2,1] [1,2,3,4,5]
 [153.0,61.5,31.0,15.75,6.6]
 ghci> map (\(a,b) -> a + b) [(1,2),(3,5),(6,3),(2,6),(2,5)]
@@ -807,11 +851,50 @@ flip' f = \x y -> f y x
 </div>
 <div>
 
-- パターンは1つしか書けない。マッチに失敗すると**ランタイムエラー**
-- `flip'` のラムダ版は「新しい関数を作る」という意図がよく表れる
+- パターンは1つしか書けない。マッチに失敗するとランタイムエラー
+- `flip'` のラムダ版は、新しい関数を作るという意図がよく表れる
 
 </div>
 </div>
+
+---
+
+# 5.4　他の言語では：ラムダ式と map・filter
+
+1〜10 の偶数を2乗したリストを作る
+
+```haskell
+map (\x -> x * x) (filter even [1..10])
+```
+
+<div class="cols even">
+<div>
+
+Rust
+
+```rust
+let squares: Vec<i32> = (1..=10)
+    .filter(|x| x % 2 == 0)
+    .map(|x| x * x)
+    .collect();
+```
+
+</div>
+<div>
+
+Python
+
+```python
+evens = filter(lambda x: x % 2 == 0, range(1, 11))
+squares = list(map(lambda x: x * x, evens))
+```
+
+</div>
+</div>
+
+- どれも `[4, 16, 36, 64, 100]` になる
+- Rust の `|x| x * x`、Python の `lambda x: x * x` が Haskell の `\x -> x * x` にあたる
+- Rust のイテレータは Haskell のリストと同じく遅延評価で、`collect` で初めて計算される
 
 ---
 
@@ -829,7 +912,7 @@ flip' f = \x y -> f y x
 | 練習 | `flip'` を実装 | `flip' f y x = ...` |
 | 練習 | `chain` と `numLongChains` | `map` → `filter` → `length` |
 
-```bash
+```console
 $ runghc report5.hs
 [OK] 問1 zipWith'
 [--] 問2 map'  (未実装またはエラー)
@@ -846,11 +929,11 @@ $ runghc report5.hs
 
 再開は 1:05 から
 
-後半は「畳み込み」「`$`」「関数合成」
+後半は畳み込み、`$`、関数合成
 
 ---
 
-<style scoped>pre { font-size: 18px; }</style>
+<style scoped>pre { font-size: 20px; }</style>
 
 # 前半のまとめ演習：解答例
 
@@ -902,8 +985,8 @@ numLongChains = length (filter (\xs -> length xs > 15) (map chain [1..100]))
 
 畳み込み関数が受け取るもの
 
-1. **2引数関数**（`+` や `div` など）
-2. **アキュムレータ**（演算結果を一時保存する値）の初期値
+1. 2引数関数（`+` や `div` など）
+2. アキュムレータ（演算結果を一時保存する値）の初期値
 3. 畳み込むリスト
 
 <div class="point">リストを1要素ずつ1回だけ走査して何かを返す関数は、畳み込みで書ける</div>
@@ -926,7 +1009,7 @@ sum' :: (Num a) => [a] -> a
 sum' xs = foldl (\acc x -> acc + x) 0 xs
 ```
 
-```haskell
+```ghci
 ghci> sum' [3,5,2,1]
 11
 ```
@@ -939,7 +1022,7 @@ ghci> sum' [3,5,2,1]
 | 0 | 3 | [5,2,1] | 3 |
 | 3 | 5 | [2,1] | 8 |
 | 8 | 2 | [1] | 10 |
-| 10 | 1 | [] | **11** |
+| 10 | 1 | [] | 11 |
 
 </div>
 </div>
@@ -999,8 +1082,7 @@ map' f xs = foldl (\acc x -> acc ++ [f x]) [] xs
 - `foldl`：`\acc x -> ...`
 - `foldr`：`\x acc -> ...`
 
-`map' (+3) [1,2,3]`
-右から `6:[]` → `5:[6]` → `4:[5,6]`
+`map' (+3) [1,2,3]` は右から `6:[]` → `5:[6]` → `4:[5,6]`
 
 `++` は `:` よりはるかに遅いので、リストを作るときは普通 `foldr`
 
@@ -1050,7 +1132,7 @@ maximum' = foldl1 max
 </div>
 
 - 要素をアキュムレータと `max` で比べ、大きいほうを新しいアキュムレータにする
-- 空リストに対して呼ぶと**ランタイムエラー**（`foldl`・`foldr` なら空リストでも動く）
+- 空リストに対して呼ぶとランタイムエラー（`foldl`・`foldr` なら空リストでも動く）
 
 <div class="point">空リストに意味がない関数なら <code>foldl1</code> / <code>foldr1</code> が使える</div>
 
@@ -1066,8 +1148,6 @@ maximum' = foldl1 max
 ```haskell
 reverse' :: [a] -> [a]
 reverse' = foldl (\acc x -> x : acc) []
--- 引数が逆なだけの (:) なので
-reverse' = foldl (flip (:)) []
 
 product' :: (Num a) => [a] -> a
 product' = foldl (*) 1
@@ -1088,7 +1168,7 @@ last' = foldl1 (\_ x -> x)
 </div>
 </div>
 
-- `reverse'`：左から順にアキュムレータの先頭にくっつける
+- `reverse'`：左から順にアキュムレータの先頭にくっつける。ラムダは引数が逆なだけの `(:)` なので `foldl (flip (:)) []` とも書ける
 - `product'`：アキュムレータを 1 から始め、掛け合わせていく
 - `filter'`：述語を満たすときだけアキュムレータの先頭に付ける
 - `last'`：常に今の要素で置き換え、最後に残ったものを返す
@@ -1102,8 +1182,10 @@ last' = foldl1 (\_ x -> x)
 2引数関数 `f`、初期値 `z` で `[3,4,5,6]` を右畳み込み
 
 ```haskell
-f 3 (f 4 (f 5 (f 6 z)))          -- f = (+), z = 0 なら 3 + (4 + (5 + (6 + 0)))
+f 3 (f 4 (f 5 (f 6 z)))
 ```
+
+`f = (+)`、`z = 0` なら `3 + (4 + (5 + (6 + 0)))`
 
 2引数関数 `g`、初期値 `z` で左畳み込み
 
@@ -1111,10 +1193,10 @@ f 3 (f 4 (f 5 (f 6 z)))          -- f = (+), z = 0 なら 3 + (4 + (5 + (6 + 0))
 g (g (g (g z 3) 4) 5) 6
 ```
 
-`g = flip (:)`、`z = []` なら
+`g = flip (:)`、`z = []` なら次の式になり、結果は `[6,5,4,3]`
 
 ```haskell
-flip (:) (flip (:) (flip (:) (flip (:) [] 3) 4) 5) 6   -- [6,5,4,3]
+flip (:) (flip (:) (flip (:) (flip (:) [] 3) 4) 5) 6
 ```
 
 ---
@@ -1141,7 +1223,7 @@ True  && x = x
 False && _ = False
 ```
 
-```haskell
+```ghci
 ghci> and' (repeat False)
 False
 ```
@@ -1153,7 +1235,7 @@ False
 
 `False && (False && (False && ...`
 
-最初の引数が `False` なら2つ目の引数を**評価しない**（遅延評価）
+最初の引数が `False` なら2つ目の引数を評価しない（遅延評価）
 
 <div class="point"><code>foldr</code> は、2つ目の引数を常に評価するとは限らない関数なら無限リストでも動く。<code>foldl</code> はダメ</div>
 
@@ -1166,7 +1248,7 @@ False
 
 ## スキャン：アキュムレータの途中経過をすべて返す
 
-```haskell
+```ghci
 ghci> scanl (+) 0 [3,5,2,1]
 [0,3,8,10,11]
 ghci> scanr (+) 0 [3,5,2,1]
@@ -1191,7 +1273,7 @@ sqrtSums :: Int
 sqrtSums = length (takeWhile (<1000) (scanl1 (+) (map sqrt [1..]))) + 1
 ```
 
-```haskell
+```ghci
 ghci> sqrtSums
 131
 ghci> sum (map sqrt [1..131])
@@ -1206,24 +1288,63 @@ ghci> sum (map sqrt [1..130])
 
 ---
 
+# 5.5　他の言語では：畳み込み
+
+`[3, 5, 2, 1]` の和を左畳み込みで求める
+
+```haskell
+foldl (\acc x -> acc + x) 0 [3,5,2,1]
+```
+
+<div class="cols even">
+<div>
+
+Rust
+
+```rust
+let sum = [3, 5, 2, 1]
+    .iter()
+    .fold(0, |acc, x| acc + x);
+```
+
+</div>
+<div>
+
+Python
+
+```python
+from functools import reduce
+
+total = reduce(lambda acc, x: acc + x,
+               [3, 5, 2, 1], 0)
+```
+
+</div>
+</div>
+
+- どれも 11。初期値、アキュムレータを先に受け取る2引数関数、リストという部品は `foldl` と同じ
+- Rust の `fold` は業務のコードでも集計によく使う。途中経過を返す `scan` もある
+
+---
+
 <!-- _class: handson -->
 
 # H4　畳み込みで書き直す（課題 問2）
 
 <span class="time">5分</span>
 
-`report5.hs` の `map'` と `filter'` を実装し、`runghc report5.hs` で `[OK]` を確認
+`report5.hs` の `map'` と `filter'` を実装し、`runghc report5.hs` で `[OK]` を確認する。`maximum'` と `reverse'` は練習（第4回は再帰で実装した）
 
 ```haskell
-map'     :: (a -> b) -> [a] -> [b]          -- 課題 問2：foldr を使う
-filter'  :: (a -> Bool) -> [a] -> [a]       -- 課題 問2：foldr を使う
-maximum' :: (Ord a) => [a] -> a             -- 練習：第4回は再帰で実装した
-reverse' :: [a] -> [a]                      -- 練習：第4回は再帰で実装した
+map'     :: (a -> b) -> [a] -> [b]
+filter'  :: (a -> Bool) -> [a] -> [a]
+maximum' :: (Ord a) => [a] -> a
+reverse' :: [a] -> [a]
 ```
 
-考える順番
+課題の2つは `foldr` を使う。考える順番
 
-1. アキュムレータの**型**と**初期値**は何か（空リストのときの答え）
+1. アキュムレータの型と初期値は何か（空リストのときの答え）
 2. 要素1つとアキュムレータから、新しいアキュムレータをどう作るか
 3. 左右どちらから畳むか（リストを作るなら `foldr` + `:`）
 
@@ -1255,7 +1376,7 @@ reverse' :: [a] -> [a]                      -- 練習：第4回は再帰で実�
 f $ x = f x
 ```
 
-```haskell
+```ghci
 ghci> sum (filter (> 10) (map (*2) [2..10]))
 80
 ghci> sum $ filter (> 10) (map (*2) [2..10])
@@ -1269,8 +1390,8 @@ ghci> sum $ filter (> 10) $ map (*2) [2..10]
 
 定義上はただの関数適用だが
 
-- 空白による関数適用：**最も高い**優先順位、左結合
-- `$`：**最も低い**優先順位、右結合
+- 空白による関数適用：最も高い優先順位、左結合
+- `$`：最も低い優先順位、右結合
 
 `sqrt 3 + 4 + 9` は `(sqrt 3) + 4 + 9`
 `sqrt $ 3 + 4 + 9` は `sqrt (3 + 4 + 9)`
@@ -1278,7 +1399,7 @@ ghci> sum $ filter (> 10) $ map (*2) [2..10]
 </div>
 </div>
 
-<div class="point"><code>$</code> は「はるか右に閉じ括弧がある開き括弧」。括弧を減らして読みやすくする</div>
+<div class="point"><code>$</code> は、はるか右に閉じ括弧がある開き括弧のように働く。括弧を減らして読みやすくする</div>
 
 ---
 
@@ -1286,12 +1407,12 @@ ghci> sum $ filter (> 10) $ map (*2) [2..10]
 
 ## 関数適用そのものを関数として扱う
 
-```haskell
+```ghci
 ghci> map ($ 3) [(4+), (10*), (^2), sqrt]
 [7.0,30.0,9.0,1.7320508075688772]
 ```
 
-- `($ 3)` は `$` のセクション：「関数を受け取り、その関数を 3 に適用する関数」
+- `($ 3)` は `$` のセクションで、関数を受け取ってその関数を 3 に適用する関数
 - リスト中のすべての関数が 3 に適用される
 
 | 関数 | `($ 3)` を適用 | 結果 |
@@ -1343,7 +1464,7 @@ f . g = \x -> f (g x)
 </div>
 </div>
 
-```haskell
+```ghci
 ghci> map (\x -> negate (abs x)) [5,-3,-6,7,-3,2,-19,24]
 [-5,-3,-6,-7,-3,-2,-19,-24]
 ghci> map (negate . abs) [5,-3,-6,7,-3,2,-19,24]
@@ -1356,24 +1477,20 @@ ghci> map (negate . abs) [5,-3,-6,7,-3,2,-19,24]
 
 ## たくさんの関数を合成する
 
-<img class="illust" src="assets/irasutoya/koujou_machine.png" style="top: 455px; width: 280px;" alt="ベルトコンベア">
+<img class="illust" src="assets/irasutoya/koujou_machine.png" style="top: 588px; width: 190px;" alt="ベルトコンベア">
 
-関数合成は**右結合**：`f (g (z x))` は `(f . g . z) x` と同じ
+関数合成は右結合：`f (g (z x))` は `(f . g . z) x` と同じ
 
-```haskell
+```ghci
 ghci> map (\xs -> negate (sum (tail xs))) [[1..5],[3..6],[1..7]]
 [-14,-15,-27]
 ghci> map (negate . sum . tail) [[1..5],[3..6],[1..7]]
 [-14,-15,-27]
 ```
 
-`negate . sum . tail` は
+`negate . sum . tail` は、`tail` → `sum` → `negate` の順に適用する
 
-1. `tail` を適用
-2. その結果に `sum` を適用
-3. その結果に `negate` を適用
-
-<div class="point">関数合成は<b>右の関数から順に</b>適用する。ラムダ式を書く代わりに、その場で関数を作れる</div>
+<div class="point">関数合成は右の関数から順に適用する。ラムダ式を書く代わりに、その場で関数を作れる</div>
 
 ---
 
@@ -1381,16 +1498,16 @@ ghci> map (negate . sum . tail) [[1..5],[3..6],[1..7]]
 
 ## 多引数関数の関数合成
 
-普通は、残り1引数になるまで**部分適用**しないと合成できない
+普通は、残り1引数になるまで部分適用しないと合成できない
 
 ```haskell
 sum (replicate 5 (max 6.7 8.9))
 (sum . replicate 5) (max 6.7 8.9)
-sum . replicate 5 $ max 6.7 8.9          -- 3つとも 44.5
+sum . replicate 5 $ max 6.7 8.9
 ```
 
-- `replicate` は本来2引数だが、`replicate 5` と部分適用して1引数にしている
-  → 「1つの引数を5回繰り返したリストを作る関数」
+- 3つとも同じ式で、値は `44.5`
+- `replicate` は本来2引数だが、`replicate 5` と部分適用して1引数にしている。1つの引数を5回繰り返したリストを作る関数になる
 - `max 6.7 8.9` の結果が `replicate 5` に渡され、そのリストが `sum` に渡される
 
 ---
@@ -1413,8 +1530,10 @@ replicate 2 (product (map (*3) (zipWith max [1,2] [4,5])))
 | ④ さらに合成 | `replicate 2 . product . map (*3) $ zipWith ...` |
 
 ```haskell
-replicate 2 . product . map (*3) $ zipWith max [1,2] [4,5]   -- [180,180]
+replicate 2 . product . map (*3) $ zipWith max [1,2] [4,5]
 ```
+
+値はどちらも `[180,180]`
 
 <div class="point">式の終わりに括弧が3つ並んだら、関数合成で書き直すチャンス</div>
 
@@ -1430,29 +1549,37 @@ replicate 2 . product . map (*3) $ zipWith max [1,2] [4,5]   -- [180,180]
 ```haskell
 sum' :: (Num a) => [a] -> a
 sum' xs = foldl (+) 0 xs
--- 両辺の右端の xs を省略
+```
+
+両辺の右端の `xs` を省略すると
+
+```haskell
 sum' = foldl (+) 0
 ```
 
 ```haskell
 fn x = ceiling (negate (tan (cos (max 50 x))))
--- 関数合成でポイントフリーに
+```
+
+関数合成を使うとポイントフリーにできる
+
+```haskell
 fn = ceiling . negate . tan . cos . max 50
 ```
 
 </div>
 <div>
 
-**ポイント**：`fn x = ...` の `x` のような、関数定義に現れる一時変数
+ポイント：`fn x = ...` の `x` のような、関数定義に現れる一時変数
 
 ポイントを書かずに関数を定義するスタイル
 
 `fn` の右端の `x` は括弧の中なので、そのままでは消せない。関数合成で表すと消せる
 
-</div>
-</div>
+<div class="point">データより関数に目が行き、どんな関数を合成しているかを考えやすくなる</div>
 
-<div class="point">データより関数に目が行き、「どんな関数を合成しているか」を考えやすくなる</div>
+</div>
+</div>
 
 ---
 
@@ -1472,7 +1599,7 @@ oddSquareSum :: Integer
 oddSquareSum = sum . takeWhile (<10000) . filter odd $ map (^2) [1..]
 ```
 
-「`filter odd` が `map (^2) [1..]` に適用され、その結果に `takeWhile (<10000)`、最後に `sum`」と読める
+右から読むと、`map (^2) [1..]` に `filter odd`、`takeWhile (<10000)`、`sum` の順に適用される
 
 <div class="note">合成のチェーンが長すぎると読みにくくなる。<code>let</code> で途中の結果に名前を付けて分割するのもよい</div>
 
@@ -1482,17 +1609,38 @@ oddSquareSum = sum . takeWhile (<10000) . filter odd $ map (^2) [1..]
 
 ## `$` と `.` の使い分け
 
-`.` は**関数と関数**をつなぐ。`$` は**関数を値に**適用する
+`.` は関数と関数をつなぐ。`$` は関数を値に適用する
 
 ```haskell
-oddSquareSum = sum . takeWhile (<10000) . filter odd $ map (^2) [1..]     -- OK
-oddSquareSum = sum . takeWhile (<10000) . filter odd . map (^2) $ [1..]   -- OK
-oddSquareSum = sum $ takeWhile (<10000) $ filter odd $ map (^2) [1..]     -- OK
-oddSquareSum = sum . takeWhile (<10000) . filter odd . map (^2) [1..]     -- ダメ
+oddSquareSum = sum . takeWhile (<10000) . filter odd $ map (^2) [1..]
+oddSquareSum = sum . takeWhile (<10000) . filter odd . map (^2) $ [1..]
+oddSquareSum = sum $ takeWhile (<10000) $ filter odd $ map (^2) [1..]
+oddSquareSum = sum . takeWhile (<10000) . filter odd . map (^2) [1..]
 ```
 
-最後の行は `map (^2) [1..]` が先に結合して**リスト**（関数ではない）になる。
-`.` の右側にリストが来るので型エラー
+上の3行は正しく、最後の行は型エラーになる
+
+最後の行は `map (^2) [1..]` が先に結合してリスト（関数ではない）になる。`.` の右側にリストが来るので型エラー
+
+---
+
+# 5.7　他の言語では：関数合成
+
+Julia は関数合成の演算子 `∘` と、値を左から右へ流すパイプ `|>` を標準で持つ
+
+```haskell
+map (negate . sum . tail) [[1..5],[3..6],[1..7]]
+```
+
+```julia
+f = (-) ∘ sum ∘ (xs -> xs[2:end])
+map(f, [1:5, 3:6, 1:7])
+1:5 |> (xs -> xs[2:end]) |> sum |> (-)
+```
+
+- 2行目は `[-14, -15, -27]`、3行目は `-14` になる。`xs -> xs[2:end]` は `tail`、`(-)` は `negate` にあたる
+- `∘` は Haskell の `.` と同じく右の関数から適用する。`|>` は逆向きで、左から順に適用する
+- Rust や Go には合成演算子がなく、メソッドチェーンや関数呼び出しの入れ子で書く
 
 ---
 
@@ -1504,14 +1652,14 @@ oddSquareSum = sum . takeWhile (<10000) . filter odd . map (^2) [1..]     -- ダ
 
 1. `report5.hs` の `oddSquareSum` を `$` と `.` を使って書く
 2. 発展：`fn` をポイントフリースタイルで書く
-3. GHCi で型と値を確認
+3. GHCi で型と値を確認する。`map (*3) . filter odd` がどんな型になるか予想してから確かめる
 
-```haskell
+```ghci
 ghci> :r
 ghci> oddSquareSum
 166650
 ghci> :t negate . abs
-ghci> :t map (*3) . filter odd     -- どんな型になる？
+ghci> :t map (*3) . filter odd
 ghci> map fn [0, 49, 50, 51, 100]
 ```
 
@@ -1528,6 +1676,8 @@ ghci> map fn [0, 49, 50, 51, 100]
 | 5.5 | `foldl` `foldr` `scanl` | リストを1つの値にまとめる |
 | 5.6 | `$` | 優先順位最低の関数適用 |
 | 5.7 | `.`・ポイントフリー | 関数をつないで新しい関数を作る |
+
+カリー化・ラムダ式・`map`・`filter`・畳み込み・関数合成は、Rust・Go・Python・Julia など今の多くの言語でも使える
 
 ---
 
