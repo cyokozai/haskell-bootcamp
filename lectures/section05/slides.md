@@ -312,21 +312,6 @@ ghci> multThree 3 4
 <div class="cols even">
 <div>
 
-Rust
-
-```rust
-fn add(x: i32) -> impl Fn(i32) -> i32 {
-    move |y| x + y
-}
-
-let add2 = add(2);
-println!("{}", add2(3));
-println!("{}", add(2)(3));
-```
-
-</div>
-<div>
-
 Go
 
 ```go
@@ -340,10 +325,23 @@ fmt.Println(add(2)(3))
 ```
 
 </div>
+<div>
+
+Julia
+
+```julia
+add(x) = y -> x + y
+
+add2 = add(2)
+println(add2(3))
+println(add(2)(3))
+```
+
+</div>
 </div>
 
 - どちらも 5 を2回表示する。`add2` は `(+2)` にあたる部分適用済みの関数
-- Rust や Go の関数は引数をまとめて受け取るのが普通で、関数を返す関数（クロージャ）を書くと同じことができる
+- Go や Julia の関数は引数をまとめて受け取るのが普通で、関数を返す関数（クロージャ）を書くと同じことができる
 - Haskell ではこれが標準の形なので、`(+) 2` と書くだけでよい
 
 ---
@@ -859,42 +857,55 @@ flip' f = \x y -> f y x
 
 ---
 
+<style scoped>pre { font-size: 18px; }</style>
+
 # 5.4　他の言語では：ラムダ式と map・filter
 
-1〜10 の偶数を2乗したリストを作る
-
-```haskell
-map (\x -> x * x) (filter even [1..10])
-```
+1〜10 の偶数を2乗したリストを作る：`map (\x -> x * x) (filter even [1..10])`
 
 <div class="cols even">
 <div>
 
-Rust
+Go（標準に map・filter がないので定義する）
 
-```rust
-let squares: Vec<i32> = (1..=10)
-    .filter(|x| x % 2 == 0)
-    .map(|x| x * x)
-    .collect();
+```go
+func Filter[T any](xs []T, p func(T) bool) (ys []T) {
+	for _, x := range xs {
+		if p(x) {
+			ys = append(ys, x)
+		}
+	}
+	return
+}
+
+func Map[T, U any](xs []T, f func(T) U) (ys []U) {
+	for _, x := range xs {
+		ys = append(ys, f(x))
+	}
+	return
+}
 ```
 
 </div>
 <div>
 
-Python
-
-```python
-evens = filter(lambda x: x % 2 == 0, range(1, 11))
-squares = list(map(lambda x: x * x, evens))
+```go
+xs := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+evens := Filter(xs, func(x int) bool { return x%2 == 0 })
+squares := Map(evens, func(x int) int { return x * x })
 ```
 
-</div>
-</div>
+Julia
 
-- どれも `[4, 16, 36, 64, 100]` になる
-- Rust の `|x| x * x`、Python の `lambda x: x * x` が Haskell の `\x -> x * x` にあたる
-- Rust のイテレータは Haskell のリストと同じく遅延評価で、`collect` で初めて計算される
+```julia
+squares = map(x -> x * x, filter(iseven, 1:10))
+```
+
+- どちらも `[4, 16, 36, 64, 100]` になる
+- Go の `func(x int) int { return x * x }`、Julia の `x -> x * x` が Haskell の `\x -> x * x` にあたる
+
+</div>
+</div>
 
 ---
 
@@ -1290,40 +1301,41 @@ ghci> sum (map sqrt [1..130])
 
 # 5.5　他の言語では：畳み込み
 
-`[3, 5, 2, 1]` の和を左畳み込みで求める
-
-```haskell
-foldl (\acc x -> acc + x) 0 [3,5,2,1]
-```
+`[3, 5, 2, 1]` の和を左畳み込みで求める：`foldl (\acc x -> acc + x) 0 [3,5,2,1]`
 
 <div class="cols even">
 <div>
 
-Rust
+Go（標準に fold がないので定義する）
 
-```rust
-let sum = [3, 5, 2, 1]
-    .iter()
-    .fold(0, |acc, x| acc + x);
+```go
+func Fold[T, A any](xs []T, init A, f func(A, T) A) A {
+	acc := init
+	for _, x := range xs {
+		acc = f(acc, x)
+	}
+	return acc
+}
+
+sum := Fold([]int{3, 5, 2, 1}, 0,
+	func(acc, x int) int { return acc + x })
 ```
 
 </div>
 <div>
 
-Python
+Julia
 
-```python
-from functools import reduce
-
-total = reduce(lambda acc, x: acc + x,
-               [3, 5, 2, 1], 0)
+```julia
+total = foldl((acc, x) -> acc + x, [3, 5, 2, 1]; init = 0)
 ```
 
-</div>
-</div>
+- どちらも 11
+- 初期値、アキュムレータを先に受け取る2引数関数、リストという部品は `foldl` と同じ
+- Julia には `foldr` もあり、途中経過を返す `accumulate` は `scanl1` にあたる
 
-- どれも 11。初期値、アキュムレータを先に受け取る2引数関数、リストという部品は `foldl` と同じ
-- Rust の `fold` は業務のコードでも集計によく使う。途中経過を返す `scan` もある
+</div>
+</div>
 
 ---
 
@@ -1640,7 +1652,7 @@ map(f, [1:5, 3:6, 1:7])
 
 - 2行目は `[-14, -15, -27]`、3行目は `-14` になる。`xs -> xs[2:end]` は `tail`、`(-)` は `negate` にあたる
 - `∘` は Haskell の `.` と同じく右の関数から適用する。`|>` は逆向きで、左から順に適用する
-- Rust や Go には合成演算子がなく、メソッドチェーンや関数呼び出しの入れ子で書く
+- Go には合成演算子がなく、関数呼び出しの入れ子で書く
 
 ---
 
@@ -1677,7 +1689,7 @@ ghci> map fn [0, 49, 50, 51, 100]
 | 5.6 | `$` | 優先順位最低の関数適用 |
 | 5.7 | `.`・ポイントフリー | 関数をつないで新しい関数を作る |
 
-カリー化・ラムダ式・`map`・`filter`・畳み込み・関数合成は、Rust・Go・Python・Julia など今の多くの言語でも使える
+カリー化・ラムダ式・`map`・`filter`・畳み込み・関数合成は、Go や Julia など今の多くの言語でも使える
 
 ---
 
