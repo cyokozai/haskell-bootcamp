@@ -6,17 +6,11 @@ Section 05: 第5章 高階関数
 ファイル
 --------
 
-<<<<<<< HEAD
-| ファイル | 内容 |
-|---|---|
-| `slides.md` | Marp スライド（60枚、ハンズオン・中間演習入り） |
-| `theme/cyokozai.css` | Marp テーマ（普段使いの Google Slides テンプレートを CSS で再現） |
-| `assets/avatar.png` | 表紙のアバター |
-| `notes.md` | 予習ノート（第4章の復習＋第5章の解説、確認問題つき） |
-| `handson.hs` | 第5章のコード一式。`ghci handson.hs` で講義中の例をすべて試せる |
-| `report5.hs` | 第5回 課題テンプレート（配布用）。`runghc report5.hs` で採点 |
+\<\<\<\<\<\<< HEAD | ファイル | 内容 | |---|---| | `slides.md` | Marp スライド（60枚、ハンズオン・中間演習入り） | | `theme/cyokozai.css` | Marp テーマ（普段使いの Google Slides テンプレートを CSS で再現） | | `assets/avatar.png` | 表紙のアバター | | `notes.md` | 予習ノート（第4章の復習＋第5章の解説、確認問題つき） | | `handson.hs` | 第5章のコード一式。`ghci handson.hs` で講義中の例をすべて試せる | | `report5.hs` | 第5回 課題テンプレート（配布用）。`runghc report5.hs` で採点 |
+
 | `report5_answer.hs` | 課題の解答例 |
-=======
+======================================
+
 | ファイル             | 内容                                                              |
 |----------------------|-------------------------------------------------------------------|
 | `slides.md`          | Marp スライド（60枚、ハンズオン・中間演習入り）                   |
@@ -26,7 +20,8 @@ Section 05: 第5章 高階関数
 | `handson.hs`         | 第5章のコード一式。`ghci handson.hs` で講義中の例をすべて試せる   |
 | `report5.hs`         | 第5回 課題テンプレート（配布用）。`runghc report5.hs` で採点      |
 | `report5_answer.hs`  | 課題の解答例                                                      |
->>>>>>> d94585d65500ca46f32bb91d4d4fb3c4c62ea8f0
+
+> > > > > > > d94585d65500ca46f32bb91d4d4fb3c4c62ea8f0
 
 時間配分
 --------
