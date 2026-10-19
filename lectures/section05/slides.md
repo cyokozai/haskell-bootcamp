@@ -307,42 +307,53 @@ ghci> multThree 3 4
 
 ---
 
-# 5.1　他の言語では：カリー化と部分適用
+<style scoped>pre { font-size: 20px; }</style>
+
+# 5.1　他の言語では：カリー化と部分適用（Go）
 
 <div class="cols even">
 <div>
 
-Go
+カリー化：`f(x, y)` を `f(x)(y)` の形に変換すること
 
 ```go
-func add(x int) func(int) int {
-	return func(y int) int { return x + y }
+func add(x, y int) int {
+	return x + y
 }
 
-add2 := add(2)
-fmt.Println(add2(3))
-fmt.Println(add(2)(3))
+func curriedAdd(x int) func(int) int {
+	return func(y int) int {
+		return x + y
+	}
+}
+
+fmt.Println(add(2, 3))
+fmt.Println(curriedAdd(2)(3))
 ```
+
+どちらも 5 を表示する
 
 </div>
 <div>
 
-Julia
+部分適用：引数の一部を固定して、残りを受け取る関数を作ること
 
-```julia
-add(x) = y -> x + y
+```go
+add2 := curriedAdd(2)
+fmt.Println(add2(3))
+fmt.Println(add2(10))
+```
 
-add2 = add(2)
-println(add2(3))
-println(add(2)(3))
+カリー化された関数なら、引数を1つ渡すだけで部分適用になる（5 と 12 を表示）。カリー化していない `add` では、無名関数で包む必要がある
+
+```go
+add2 := func(y int) int { return add(2, y) }
 ```
 
 </div>
 </div>
 
-- どちらも 5 を2回表示する。`add2` は `(+2)` にあたる部分適用済みの関数
-- Go や Julia の関数は引数をまとめて受け取るのが普通で、関数を返す関数（クロージャ）を書くと同じことができる
-- Haskell ではこれが標準の形なので、`(+) 2` と書くだけでよい
+Haskell の関数は最初からカリー化されているので、`(+) 2` と書くだけで部分適用になる
 
 ---
 
