@@ -40,12 +40,15 @@ Section 05: 第5章 高階関数
 
 ```bash
 cd lectures/section05
+sh fetch-illustrations.sh                                          # 挿絵を取得（初回のみ）
 npx @marp-team/marp-cli@latest slides.md -o slides.html          # HTML
 npx @marp-team/marp-cli@latest slides.md --pdf -o slides.pdf      # PDF
 npx @marp-team/marp-cli@latest -s .                               # プレビューサーバ
 ```
 
-VS Code の Marp 拡張でプレビューする場合は、devcontainer の設定で `markdown.marp.themes` と `markdown.marp.html: "all"` を指定済み。
+挿絵は[いらすとや](https://www.irasutoya.com/)の素材。素材の再配布は禁止されているため `assets/irasutoya/` はリポジトリに含めず、`fetch-illustrations.sh` で取得する。
+
+VS Code の Marp 拡張でプレビューする場合は、`.vscode/settings.json`（devcontainer の外）と devcontainer の設定で `markdown.marp.themes` と `markdown.marp.html: "all"` を指定済み。
 
 Haskell コードの確認
 --------------------

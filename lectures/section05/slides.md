@@ -186,6 +186,8 @@ max :: Ord a => a -> a -> a
 
 ## 部分適用の例：`multThree`
 
+<img class="illust" src="assets/irasutoya/building_koujou_entotsu.png" style="top: 370px; width: 205px;" alt="工場">
+
 ```haskell
 multThree :: Int -> Int -> Int -> Int   -- = Int -> (Int -> (Int -> Int))
 multThree x y z = x * y * z
@@ -891,6 +893,8 @@ numLongChains = length (filter (\xs -> length xs > 15) (map chain [1..100]))
 
 ## 畳み込み（fold）：リストを単一の値にまとめる
 
+<img class="illust" src="assets/irasutoya/sentaku_tatamu.png" style="top: 230px; width: 330px;" alt="洗濯物をたたむ人">
+
 第4章の再帰関数の多くは同じパターン
 
 - 基底部は空リスト
@@ -1351,6 +1355,8 @@ ghci> map (negate . abs) [5,-3,-6,7,-3,2,-19,24]
 # 5.7　関数合成
 
 ## たくさんの関数を合成する
+
+<img class="illust" src="assets/irasutoya/koujou_machine.png" style="top: 455px; width: 280px;" alt="ベルトコンベア">
 
 関数合成は**右結合**：`f (g (z x))` は `(f . g . z) x` と同じ
 

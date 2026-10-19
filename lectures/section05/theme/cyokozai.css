@@ -286,3 +286,11 @@ section.handson pre { font-size: 20px; }
   border-radius: 999px;
   font-size: 19px;
 }
+
+/* ---------- 挿絵（いらすとや。assets/irasutoya/ は fetch-illustrations.sh で取得） ---------- */
+section img.illust {
+  position: absolute;
+  right: 64px;
+  height: auto;
+  pointer-events: none;
+}
