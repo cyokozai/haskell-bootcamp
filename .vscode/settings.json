@@ -1,0 +1,4 @@
+{
+  "markdown.marp.themes": ["./lectures/section05/theme/cyokozai.css"],
+  "markdown.marp.html": "all"
+}

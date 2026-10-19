@@ -12,11 +12,7 @@ title: アルゴリズム特論 第5章 高階関数
 
 ## 第5章　高階関数
 
-<<<<<<< HEAD
 2581008 井上 裕介
-=======
-井上 裕介（cyokozai）
->>>>>>> d94585d65500ca46f32bb91d4d4fb3c4c62ea8f0
 
 <!--
 0:00 開始。教科書「すごいHaskellたのしく学ぼう!」第5章。
@@ -27,11 +23,11 @@ title: アルゴリズム特論 第5章 高階関数
 # 今日の流れ（110分）
 
 | 時間 | 内容 |
-|---|---|---|
+|---|---|
 | 0:00–0:05 | 導入・第4章の振り返り |
 | 0:05–0:20 | 5.1 カリー化関数 |
 | 0:20–0:50 | 5.2 高階実演 / 5.3 道具箱 / 5.4 ラムダ式 |
-| 0:50–1:00 | **前半のまとめ演習**（課題 問1〜3） |
+| 0:50–1:00 | **前半のまとめ演習**（課題 問1） |
 | 1:05–1:30 | 5.5 畳み込み / 5.6 `$` |
 | 1:30–1:42 | 5.7 関数合成 |
 | 1:42–1:50 | まとめ・課題の説明 |
@@ -819,26 +815,26 @@ flip' f = \x y -> f y x
 
 <!-- _class: exercise -->
 
-# 前半のまとめ演習（課題 問1〜3）
+# 前半のまとめ演習（課題 問1）
 
 <span class="time">10分</span>
 
-`report5.hs` の `undefined` を書き換え、`:r` と `runghc report5.hs` で確かめる
+課題は `report5.hs` の `undefined` を書き換え、`:r` と `runghc report5.hs` で確かめる
 
-| 問 | 内容 | ヒント |
+| | 内容 | ヒント |
 |---|---|---|
-| 問1 | `zipWith'` を実装 | 基底部はどちらかが `[]` |
-| 問2 | `flip'` を実装 | `flip' f y x = ...` |
-| 問3 | `chain` と `numLongChains` | `map` → `filter` → `length` |
+| 課題 問1 | `zipWith'` を実装 | 基底部はどちらかが `[]` |
+| 練習 | `flip'` を実装 | `flip' f y x = ...` |
+| 練習 | `chain` と `numLongChains` | `map` → `filter` → `length` |
 
 ```bash
 $ runghc report5.hs
 [OK] 問1 zipWith'
-[--] 問2 flip'  (未実装またはエラー)
+[--] 問2 map'  (未実装またはエラー)
 ...
 ```
 
-早く終わった人：`numLongChains` をラムダ式で書き直す
+<div class="note">練習は提出なし。<code>ghci</code> で試し、休憩明けの解答例で確認する</div>
 
 ---
 
@@ -851,6 +847,8 @@ $ runghc report5.hs
 後半は「畳み込み」「`$`」「関数合成」
 
 ---
+
+<style scoped>pre { font-size: 18px; }</style>
 
 # 前半のまとめ演習：解答例
 
@@ -1206,17 +1204,17 @@ ghci> sum (map sqrt [1..130])
 
 <!-- _class: handson -->
 
-# H4　畳み込みで書き直す（課題 問4・5）
+# H4　畳み込みで書き直す（課題 問2）
 
 <span class="time">5分</span>
 
-`report5.hs` の次の関数を実装し、`runghc report5.hs` で `[OK]` を確認
+`report5.hs` の `map'` と `filter'` を実装し、`runghc report5.hs` で `[OK]` を確認
 
 ```haskell
-map'     :: (a -> b) -> [a] -> [b]          -- foldr を使う
-filter'  :: (a -> Bool) -> [a] -> [a]       -- foldr を使う
-maximum' :: (Ord a) => [a] -> a             -- 第4回は再帰で実装した
-reverse' :: [a] -> [a]                      -- 第4回は再帰で実装した
+map'     :: (a -> b) -> [a] -> [b]          -- 課題 問2：foldr を使う
+filter'  :: (a -> Bool) -> [a] -> [a]       -- 課題 問2：foldr を使う
+maximum' :: (Ord a) => [a] -> a             -- 練習：第4回は再帰で実装した
+reverse' :: [a] -> [a]                      -- 練習：第4回は再帰で実装した
 ```
 
 考える順番
@@ -1494,7 +1492,7 @@ oddSquareSum = sum . takeWhile (<10000) . filter odd . map (^2) [1..]     -- ダ
 
 <!-- _class: handson -->
 
-# H5　関数合成で書き換える（課題 問7）
+# H5　関数合成で書き換える（課題 問3）
 
 <span class="time">4分</span>
 
@@ -1534,11 +1532,7 @@ ghci> map fn [0, 49, 50, 51, 100]
 | 問 | 内容 |
 |---|---|
 | 問1 | `zipWith'` を実装せよ（標準関数 `zipWith` は使用不可） |
-| 問2 | `flip'` を実装せよ（標準関数 `flip` は使用不可） |
-| 問3 | 1〜100 のうち、長さが 15 より長いコラッツ列の開始数の個数を `map` と `filter` で求めよ |
-| 問4 | `foldr` を使って `map'` と `filter'` を実装せよ |
-| 問5 | 畳み込みを使って `maximum'` と `reverse'` を実装せよ |
-| 問6 | 平方根の和が 1000 を超えるのは何個目か `scanl1` と `takeWhile` で求めよ |
-| 問7 | `oddSquareSum` を `$` と `.` で書き換えよ（発展：`fn` をポイントフリーに） |
+| 問2 | `foldr` を使って `map'` と `filter'` を実装せよ |
+| 問3 | `oddSquareSum` を `$` と `.` で書き換えよ（発展：`fn` をポイントフリーに） |
 
 提出前に `runghc report5.hs` で全問 `[OK]` を確認する
