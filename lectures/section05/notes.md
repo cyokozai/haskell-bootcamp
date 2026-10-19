@@ -558,7 +558,7 @@ fn = ceiling . negate . tan . cos . max 50
 発表前に確かめること
 --------------------
 
--	[ ] `runghc report5_answer.hs` を実行し、全問が `[OK]` になった
+-	[ ] `answers/answer05-01.hs`〜`03.hs` を `runghc` で実行し、すべてが `[OK]` になった
 -	[ ] `ghci handson.hs` で、スライドにある ghci の例をすべて打ってみた
 -	[ ] 次の5つの質問に答えられる
 
