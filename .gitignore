@@ -3,3 +3,8 @@
 *.DS_Store
 
 .env
+# OS のゴミ箱・生成物
+.Trash-*/
+Claude outputs/
+lectures/*/slides.pdf
+lectures/*/assets/irasutoya/

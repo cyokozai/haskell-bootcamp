@@ -1,0 +1,5 @@
+# marp-cli の設定 (lectures/section05 で実行する)
+html: true
+allowLocalFiles: true
+themeSet:
+  - ./theme/cyokozai.css
