@@ -6,15 +6,29 @@ Section 05: 第5章 高階関数
 ファイル
 --------
 
-| ファイル             | 内容                                                              |
-|----------------------|-------------------------------------------------------------------|
-| `slides.md`          | Marp スライド（60枚、ハンズオン・中間演習入り）                   |
-| `theme/cyokozai.css` | Marp テーマ（普段使いの Google Slides テンプレートを CSS で再現） |
-| `assets/avatar.png`  | 表紙のアバター                                                    |
-| `notes.md`           | 予習ノート（第4章の復習＋第5章の解説、確認問題つき）              |
-| `handson.hs`         | 第5章のコード一式。`ghci handson.hs` で講義中の例をすべて試せる   |
-| `report5.hs`         | 第5回 課題テンプレート（配布用）。`runghc report5.hs` で採点      |
-| `report5_answer.hs`  | 課題の解答例                                                      |
+| ファイル                                   | 内容                                                              |
+|--------------------------------------------|-------------------------------------------------------------------|
+| `slides.md`                                | Marp スライド（63枚、ハンズオン・演習入り）                       |
+| `theme/cyokozai.css`                       | Marp テーマ（普段使いの Google Slides テンプレートを CSS で再現） |
+| `assets/avatar.png`                        | 表紙のアバター                                                    |
+| `fetch-illustrations.sh`                   | 挿絵（いらすとや）を `assets/irasutoya/` に取得する               |
+| `notes.md`                                 | 予習ノート（第4章の復習＋第5章の解説、確認問題つき）              |
+| `handson.hs`                               | 第5章のコード一式。`ghci handson.hs` で講義中の例をすべて試せる   |
+| `report05-01.hs`〜`report05-03.hs`         | 第5回 課題（配布用、問ごと）。`runghc report05-01.hs` などで採点  |
+| `answers/answer05-01.hs`〜`answer05-03.hs` | 課題の解答例                                                      |
+
+スライドに出てくる定義は、例ごとに1つのファイルにしてある。どのファイルも単独で `ghci` に読み込める。
+
+| 節    | ファイル                                                                 |
+|-------|--------------------------------------------------------------------------|
+| 第4章 | `recursion.hs`                                                           |
+| 5.1   | `multThree.hs`、`compareWithHundred.hs`、`sections.hs`                   |
+| 5.2   | `applyTwice.hs`、`zipWith.hs`、`flip.hs`                                 |
+| 5.3   | `map.hs`、`filter.hs`、`quicksort.hs`、`largestDivisible.hs`、`chain.hs` |
+| 5.4   | `lambda.hs`                                                              |
+| 5.5   | `sum.hs`、`mapFold.hs`、`elem.hs`、`folds.hs`、`and.hs`、`sqrtSums.hs`   |
+| 5.6   | `dollar.hs`                                                              |
+| 5.7   | `compose.hs`、`pointFree.hs`、`oddSquareSum.hs`                          |
 
 時間配分
 --------
@@ -54,7 +68,8 @@ Haskell コードの確認
 --------------------
 
 ```bash
-runghc report5_answer.hs   # 全問 [OK] になること
-runghc report5.hs          # 配布時は全問 [--]（未実装）
-ghci handson.hs            # スライドの ghci 例を試す
+runghc answers/answer05-01.hs   # 解答例は [OK] になる（02・03 も同様）
+runghc report05-01.hs           # 配布時は [--]（未実装）
+ghci handson.hs                 # スライドの ghci 例を試す
+ghci multThree.hs               # 例ごとのファイルを単独で試す
 ```

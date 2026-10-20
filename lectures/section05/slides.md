@@ -94,7 +94,7 @@ reverse' (x:xs) = reverse' xs ++ [x]
 
 ```console
 $ cd lectures/section05
-$ ghci report5.hs
+$ ghci report05-01.hs
 ```
 
 2. GHCi でよく使うコマンドは次の4つ
@@ -106,7 +106,7 @@ $ ghci report5.hs
 | `:t 式` | 式の型を表示（type） |
 | `:q` | GHCi を終了 |
 
-3. `runghc report5.hs` で課題のテストを一括で実行する（未実装の問は `[--]` と表示される）
+3. `runghc report05-01.hs` のように、問ごとのファイルでテストを実行する（未実装の問は `[--]` と表示される）
 
 ---
 
@@ -900,7 +900,7 @@ squares = map(x -> x * x, filter(iseven, 1:10))
 
 <span class="time">10分</span>
 
-課題は `report5.hs` の `undefined` を書き換え、`:r` と `runghc report5.hs` で確かめる
+課題は `report05-01.hs` の `undefined` を書き換え、`:r` と `runghc report05-01.hs` で確かめる
 
 | | 内容 | ヒント |
 |---|---|---|
@@ -909,10 +909,9 @@ squares = map(x -> x * x, filter(iseven, 1:10))
 | 練習 | `chain` と `numLongChains` | `map`、`filter`、`length` の順に使う |
 
 ```console
-$ runghc report5.hs
+$ runghc report05-01.hs
 [OK] 問1 zipWith'
-[--] 問2 map'  (未実装またはエラー)
-...
+[OK] 問1 zipWith' (長さ違い)
 ```
 
 練習は提出しない。`ghci` で試し、休憩明けの解答例で答え合わせをする
@@ -1314,7 +1313,7 @@ Julia には `foldr` もあり、途中経過を返す `accumulate` は `scanl1`
 
 <span class="time">5分</span>
 
-`report5.hs` の `map'` と `filter'` を `foldr` で実装し、`runghc report5.hs` で `[OK]` になることを確かめる。`maximum'` と `reverse'` は練習で、第4回は再帰で実装した
+`report05-02.hs` の `map'` と `filter'` を `foldr` で実装し、`runghc report05-02.hs` で `[OK]` になることを確かめる。`maximum'` と `reverse'` は練習で、第4回は再帰で実装した
 
 ```haskell
 map'     :: (a -> b) -> [a] -> [b]
@@ -1615,7 +1614,7 @@ map(f, [1:5, 3:6, 1:7])
 
 <span class="time">4分</span>
 
-1. `report5.hs` の `oddSquareSum` を `$` と `.` を使って書く
+1. `report05-03.hs` の `oddSquareSum` を `$` と `.` を使って書く
 2. 余裕があれば、発展として `fn` をポイントフリースタイルで書く
 3. GHCi で型と値を確認する。`map (*3) . filter odd` がどんな型になるか予想してから確かめる
 
@@ -1632,7 +1631,7 @@ ghci> map fn [0, 49, 50, 51, 100]
 
 # 第5回 課題
 
-`report5.hs` を完成させて提出する。型宣言は変更しない
+`report05-01.hs`〜`report05-03.hs` の3つを完成させて提出する。型宣言は変更しない
 
 | 問 | 内容 |
 |---|---|
@@ -1640,4 +1639,4 @@ ghci> map fn [0, 49, 50, 51, 100]
 | 問2 | `foldr` を使って `map'` と `filter'` を実装せよ |
 | 問3 | `oddSquareSum` を `$` と `.` で書き換えよ（発展として `fn` をポイントフリーにする） |
 
-提出前に `runghc report5.hs` を実行し、6件すべてが `[OK]` になることを確かめる。`[NG]` が出た問は、表示される `got` と `expected` を見比べて直す
+提出前に3つのファイルをそれぞれ `runghc` で実行し、すべてが `[OK]` になることを確かめる。`[NG]` が出た問は、表示される `got` と `expected` を見比べて直す
