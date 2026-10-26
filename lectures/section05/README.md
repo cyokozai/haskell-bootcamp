@@ -8,14 +8,14 @@ Section 05: 第5章 高階関数
 
 | ファイル                                   | 内容                                                              |
 |--------------------------------------------|-------------------------------------------------------------------|
-| `slides.md`                                | Marp スライド（63枚、ハンズオン・演習入り）                       |
+| `slides.md`                                | Marp スライド（64枚、ハンズオン・演習入り）                       |
 | `theme/cyokozai.css`                       | Marp テーマ（普段使いの Google Slides テンプレートを CSS で再現） |
 | `assets/avatar.png`                        | 表紙のアバター                                                    |
 | `fetch-illustrations.sh`                   | 挿絵（いらすとや）を `assets/irasutoya/` に取得する               |
 | `notes.md`                                 | 予習ノート（第4章の復習＋第5章の解説、確認問題つき）              |
 | `handson.hs`                               | 第5章のコード一式。`ghci handson.hs` で講義中の例をすべて試せる   |
-| `report05-01.hs`〜`report05-03.hs`         | 第5回 課題（配布用、問ごと）。`runghc report05-01.hs` などで採点  |
-| `answers/answer05-01.hs`〜`answer05-03.hs` | 課題の解答例                                                      |
+| `report05-01.hs`〜`report05-05.hs`         | 第5回 課題（配布用、問ごと）。`runghc report05-01.hs` などで採点  |
+| `answers/answer05-01.hs`〜`answer05-05.hs` | 課題の解答例                                                      |
 
 スライドに出てくる定義は、例ごとに1つのファイルにしてある。どのファイルも単独で `ghci` に読み込める。
 
@@ -68,7 +68,7 @@ Haskell コードの確認
 --------------------
 
 ```bash
-runghc answers/answer05-01.hs   # 解答例は [OK] になる（02・03 も同様）
+runghc answers/answer05-01.hs   # 解答例は [OK] になる（02〜05 も同様）
 runghc report05-01.hs           # 配布時は [--]（未実装）
 ghci handson.hs                 # スライドの ghci 例を試す
 ghci multThree.hs               # 例ごとのファイルを単独で試す
