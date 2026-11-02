@@ -1,4 +1,4 @@
--- 第6回 課題 解答例 問2 重複している単語のみ，出現回数の多い順に出現回数と単語のペアをリスト化したい，
+-- 第6回 課題 問2 重複している単語のみ，出現回数の多い順に出現回数と単語のペアをリスト化したい，
 --   duplicateWordCount :: String -> [(Int, String)] を実装せよ
 --   ghci> duplicateWordCount "a b a c b a d"   ==> [(3,"a"),(2,"b")]
 -- 仕様:
@@ -6,8 +6,8 @@
 --   - 出現回数が 2 以上の単語だけを残す (重複がなければ [])
 --   - 出現回数の多い順に並べる。出現回数が同じときは単語の辞書順 (昇順) に並べる
 --
--- 実行: runghc answers/answer06-02.hs
--- 対話: ghci answers/answer06-02.hs
+-- 実行: runghc reports/report02/report02.hs
+-- 対話: ghci reports/report02/report02.hs
 
 import Control.Exception (SomeException, evaluate, try)
 import Data.List (group, sort, sortOn)
@@ -20,13 +20,13 @@ duplicateWordCount :: String -> [(Int, String)]
 duplicateWordCount =
   sortOn (\(n, w) -> (Down n, w))
     . filter (\(n, _) -> n >= 2)
-    . map (\ws -> (length ws, head ws))
+    . map (\ws@(w : _) -> (length ws, w))
     . group
     . sort
     . words
 
 -- ===================================================================
--- 動作確認 (report06-02.hs と同じテスト)
+-- 動作確認
 -- ===================================================================
 check :: (Eq a, Show a) => String -> a -> a -> IO ()
 check name actual expected = do
