@@ -1,23 +1,9 @@
--- 第6回 課題 問5 String で表現された電話番号を受け取って Int リストに変換して返す関数
---   string2digits を、digitToInt と isDigit を使って作成せよ
---   ghci> string2digits "948-554-4389"   ==> [9,4,8,5,5,4,4,3,8,9]
---
--- 実行: runghc reports/report05/report05.hs
--- 対話: ghci reports/report05/report05.hs
-
 import Control.Exception (SomeException, evaluate, try)
 import Data.Char (digitToInt, isDigit)
 
--- filter isDigit で '0'〜'9' だけを残してから、map digitToInt で数値に変える。
--- digitToInt は 16 進数の 'a'〜'f' ('A'〜'F') も 10〜15 に変換してしまい、
--- それ以外の文字 ('-' や ' ' など) ではエラーになる。
--- そのため先に isDigit で 10 進の数字だけに絞っておく必要がある。
 string2digits :: String -> [Int]
 string2digits = map digitToInt . filter isDigit
 
--- ===================================================================
--- 動作確認
--- ===================================================================
 check :: (Eq a, Show a) => String -> a -> a -> IO ()
 check name actual expected = do
   r <- try (evaluate (actual == expected)) :: IO (Either SomeException Bool)
