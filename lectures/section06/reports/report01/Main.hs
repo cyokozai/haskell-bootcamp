@@ -1,11 +1,8 @@
--- 第6回 課題 問1 Shape モジュールを作成し，Shape.Rectangle モジュールと
+-- 第6回 課題 解答例 問1 Shape モジュールを作成し，Shape.Rectangle モジュールと
 --   Shape.Circle モジュールを各々作成したうえで，関数 rectAreaFor と
 --   関数 circleAreaFor を Main.hs に作成せよ
 --   ghci> rectAreaFor 3 4    ==> 12.0
 --   ghci> circleAreaFor 2    ==> 12.566370614359172   (pi * 2 * 2)
---
--- 学籍番号:
--- 氏名:
 --
 -- このディレクトリの構成 (階層モジュールはディレクトリで表す):
 --   Main.hs              -- このファイル (rectAreaFor / circleAreaFor とテスト)
@@ -13,13 +10,8 @@
 --   Shape/Rectangle.hs   -- module Shape.Rectangle
 --   Shape/Circle.hs      -- module Shape.Circle
 --
--- 各ファイルの undefined を自分の実装に書き換えて提出すること。型宣言は変更しないこと。
--- rectAreaFor / circleAreaFor は Shape.Rectangle / Shape.Circle の area を使って定義すること。
---
--- 動作確認 (Main.hs のあるディレクトリで実行する):
---   $ cd lectures/section06/reports/report01
---   $ runghc Main.hs     -- テストを実行 ([OK] / [NG] / [--] が表示される)
---   $ ghci Main.hs       -- 対話的に試す (編集後は :r で再読み込み)
+-- 実行: cd lectures/section06/reports/report01 && runghc Main.hs
+-- 対話: cd lectures/section06/reports/report01 && ghci Main.hs
 
 import Control.Exception (SomeException, evaluate, try)
 import Shape
@@ -28,14 +20,14 @@ import qualified Shape.Rectangle as Rectangle
 
 -- 幅 w, 高さ h の長方形の面積 (Shape.Rectangle の area を使う)
 rectAreaFor :: Double -> Double -> Double
-rectAreaFor = undefined
+rectAreaFor w h = Rectangle.area w h
 
 -- 半径 r の円の面積 (Shape.Circle の area を使う)
 circleAreaFor :: Double -> Double
-circleAreaFor = undefined
+circleAreaFor r = Circle.area r
 
 -- ===================================================================
--- 動作確認 (ここから下は変更しないこと)
+-- 動作確認
 -- ===================================================================
 check :: (Eq a, Show a) => String -> a -> a -> IO ()
 check name actual expected = do
