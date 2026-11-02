@@ -25,23 +25,22 @@
 --   GHC 8.8 以降は既定のスタック上限 (-K) が物理メモリの 80% なので、
 --   問題文のとおりに打っても stack overflow にならず、メモリを大量に使って
 --   答えが出る (または先にメモリが尽きる) ことが多い。
---   再現するには RTS オプションでスタック上限を小さくする。
---   (GHC 9.6.x で確認)
+--   再現するには RTS オプション +RTS -K<サイズ> でスタック上限を小さくする
+--   (GHC 9.10.3 で確認。要素数 10^6 なら -K8m で十分に再現する)。
 --
---   ghci で試す場合:
 --     $ ghci reports/report09/report09.hs +RTS -K8m
 --     ghci> dotproduct2 [1..1000000] [2..1000001]
 --     *** Exception: stack overflow
 --     ghci> dotproduct3 [1..1000000] [2..1000001]
 --     333334333334000000
 --
---   コンパイルして試す場合 (-rtsopts で実行時に +RTS を受け付ける):
---     $ ghc -O0 -rtsopts reports/report09/report09.hs -o dot09
---     $ ./dot09 +RTS -K1m          -- main のテストを上限 1MB で実行
---   なお -O (最適化) を付けると、GHC の正格性解析が「acc は最後に必ず使われる」
---   ことを見抜いて dotproduct2 の累積引数も正格に計算するため、
---   dotproduct2 でも stack overflow が起きなくなる。seq の効果を確かめるときは
---   -O0 (ghci や runghc も最適化なし) で試すこと。
+--   (同じく ghci reports/report07/report07.hs +RTS -K8m で、問7 の dotproduct も
+--    dotproduct [1..1000000] [2..1000001] で stack overflow になる)
+--
+--   なお ghc -O (最適化) でコンパイルすると、GHC の正格性解析が
+--   「acc は最後に必ず使われる」ことを見抜いて dotproduct2 の累積引数も
+--   毎回計算するようになるため、+RTS -K1m でも dotproduct2 が通ってしまう。
+--   seq の効果を確かめるときは、最適化なしの ghci / runghc (または ghc -O0) で試すこと。
 
 import Control.Exception (SomeException, evaluate, try)
 
