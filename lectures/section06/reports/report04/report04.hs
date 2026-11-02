@@ -1,18 +1,12 @@
 -- 第6回 課題 問4 各桁の数の合計が N になる最初の自然数を知りたい。
---   教科書の firstTo 関数 (下に参考として載せてある) は N が大きくなると非常に遅い。
+--   先ほどの firstTo 関数 (下に参考として載せてある) は N が大きくなると非常に遅い。
 --   そこで、N が 100 や 1000 のような場合でも 1 秒以内に求めたい。
 --   firstTo' :: Int -> Integer を実装せよ
 --   ghci> firstTo' 40     ==> 49999
 --   ghci> firstTo' 100    ==> 199999999999
 --
--- 学籍番号:
--- 氏名:
---
--- undefined を自分の実装に書き換えて提出すること。型宣言は変更しないこと。
---
--- 動作確認:
---   $ runghc report06-04.hs     -- テストを実行 ([OK] / [NG] / [--] が表示される)
---   $ ghci report06-04.hs       -- 対話的に試す (編集後は :r で再読み込み)
+-- 実行: runghc reports/report04/report04.hs
+-- 対話: ghci reports/report04/report04.hs
 
 import Control.Exception (SomeException, evaluate, try)
 import Data.Char (digitToInt)
@@ -31,7 +25,7 @@ firstTo :: Int -> Maybe Integer
 firstTo n = find (\x -> digitSum x == n) [1 ..]
 
 -- ===================================================================
--- 動作確認 (ここから下は変更しないこと)
+-- 動作確認
 -- ===================================================================
 check :: (Eq a, Show a) => String -> a -> a -> IO ()
 check name actual expected = do
