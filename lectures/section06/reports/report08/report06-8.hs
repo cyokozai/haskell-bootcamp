@@ -1,26 +1,11 @@
--- 第6回 課題 問8 内積を計算する関数 dotproduct2 を末尾再帰を使って作成せよ
---   ghci> dotproduct2 [1..10] [2..11]   ==> 440
---
--- 2 つのリストの長さが違う場合は、短い方に合わせる (zipWith と同じ)。
---
--- 実行: runghc reports/report08/report08.hs
--- 対話: ghci reports/report08/report08.hs
-
 import Control.Exception (SomeException, evaluate, try)
 
--- 補助関数 go に累積引数 acc (ここまでの和) を持たせる。
--- go の再帰呼び出しが関数の最後の処理なので末尾再帰になっている。
--- ただし Haskell は遅延評価なので、acc + x * y はその場では計算されず
--- 「未評価の式 (thunk)」として積み上がっていく (問9 を参照)。
 dotproduct2 :: (Num a) => [a] -> [a] -> a
 dotproduct2 = go 0
   where
     go acc (x : xs) (y : ys) = go (acc + x * y) xs ys
     go acc _ _ = acc
 
--- ===================================================================
--- 動作確認
--- ===================================================================
 check :: (Eq a, Show a) => String -> a -> a -> IO ()
 check name actual expected = do
   r <- try (evaluate (actual == expected)) :: IO (Either SomeException Bool)
